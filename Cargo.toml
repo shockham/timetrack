@@ -1,0 +1,6 @@
+[package]
+name = "timetrack"
+version = "0.1.0"
+authors = ["shockham <samuel.hockham@gmail.com>"]
+
+[dependencies]
