@@ -4,57 +4,57 @@ use std::str::FromStr;
 
 
 #[derive(Debug, Clone)]
-struct Day<'a> {
-    date: &'a str,
-    logs: Vec<Log<'a>>,
+struct Day {
+    date: String,
+    logs: Vec<Log>,
 }
 
-impl<'a> Day<'a> {
+impl Day {
     fn new(str: &str) -> Day {
         let mut d: Vec<&str> = str.split("\n").filter(|s| !s.is_empty()).collect();
 
         Day {
-            date: d.remove(0),
+            date: d.remove(0).into(),
             logs: d.iter().map(|s| Log::new(s)).collect(),
         }
     }
 }
 
 #[derive(Debug, Clone)]
-struct Log<'a> {
+struct Log {
     time: f32,
-    disc: &'a str,
-    cat: &'a str,
-    name: &'a str,
+    disc: String,
+    cat: String,
+    name: String,
 }
 
-impl<'a> Log<'a> {
+impl Log {
     fn new(str: &str) -> Log {
         let v: Vec<&str> = str.split_whitespace().collect();
 
         Log {
             time: f32::from_str(v[0]).unwrap(),
-            disc: v[1],
-            cat: v[2],
-            name: v[3],
+            disc: v[1].into(),
+            cat: v[2].into(),
+            name: v[3].into(),
         }
     }
 }
 
 fn main() {
-    parse_file();
+    let days = parse_file();
+
+    println!("{:?}", days);
 }
 
-fn parse_file() {
-    let mut file = File::open("../timetrack.txt").unwrap();
+fn parse_file() -> Vec<Day> {
+    let mut file = File::open("../timetrack/timetrack.txt").unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
 
-    let days: Vec<Day> = contents
+    contents
         .split("- ")
         .filter(|s| !s.is_empty())
-        .map(|d| Day::new(d))
-        .collect();
-
-    println!("{:?}", days);
+        .map(|d| Day::new(d.clone()))
+        .collect::<Vec<Day>>()
 }
