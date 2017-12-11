@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::str::FromStr;
 use std::iter;
+use std::collections::HashMap;
 
 
 #[derive(Debug, Clone)]
@@ -42,18 +43,43 @@ impl Log {
     }
 }
 
+fn get_bar_str(len: usize) -> String {
+    iter::repeat("|")
+        .take(len)
+        .fold("".to_string(), |mut acc, c| {
+            acc.push_str(c);
+            acc
+        })
+}
+
 fn main() {
     let days = parse_file();
 
+    let mut daily = String::new();
+    let mut cats = HashMap::new();
+
     for d in days {
         let half_hours = d.logs.iter().fold(0f32, |acc, l| acc + (l.time * 2f32));
-        let time_bar = iter::repeat("|")
-            .take(half_hours as usize)
-            .fold("".to_string(), |mut acc, c| {
-                acc.push_str(c);
-                acc
-            });
-        println!("{} [{:.1}h] {}", d.date, half_hours / 2f32, time_bar);
+        let time_bar = get_bar_str(half_hours as usize);
+
+        daily += &format!("{} [{:.1}h] {}\n", d.date, half_hours / 2f32, time_bar);
+
+        for l in d.logs {
+            if !cats.contains_key(&l.cat) {
+                cats.insert(l.cat, l.time);
+            } else {
+                let mut cat = cats[&l.cat];
+                cat += l.time;
+                cats.insert(l.cat, cat);
+            }
+        }
+    }
+
+    println!("DAILY\n{}", daily);
+    println!("CATEGORIES");
+
+    for (k, v) in cats {
+        println!("{:>4} [{:>4}h] {}", k, v, get_bar_str((v * 2f32) as usize));
     }
 }
 
