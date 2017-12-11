@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::str::FromStr;
+use std::iter;
 
 
 #[derive(Debug, Clone)]
@@ -44,7 +45,16 @@ impl Log {
 fn main() {
     let days = parse_file();
 
-    println!("{:?}", days);
+    for d in days {
+        let half_hours = d.logs.iter().fold(0f32, |acc, l| acc + (l.time * 2f32));
+        let time_bar = iter::repeat("|")
+            .take(half_hours as usize)
+            .fold("".to_string(), |mut acc, c| {
+                acc.push_str(c);
+                acc
+            });
+        println!("{} [{:.1}h] {}", d.date, half_hours / 2f32, time_bar);
+    }
 }
 
 fn parse_file() -> Vec<Day> {
