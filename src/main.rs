@@ -57,6 +57,7 @@ fn main() {
 
     let mut daily = String::new();
     let mut cats = HashMap::new();
+    let mut discs = HashMap::new();
 
     for d in days {
         let half_hours = d.logs.iter().fold(0f32, |acc, l| acc + (l.time * 2f32));
@@ -72,14 +73,27 @@ fn main() {
                 cat += l.time;
                 cats.insert(l.cat, cat);
             }
+            
+            if !discs.contains_key(&l.disc) {
+                discs.insert(l.disc, l.time);
+            } else {
+                let mut disc = discs[&l.disc];
+                disc += l.time;
+                discs.insert(l.disc, disc);
+            }
         }
     }
 
     println!("DAILY\n{}", daily);
-    println!("CATEGORIES");
 
+    println!("CATEGORIES");
     for (k, v) in cats {
         println!("{:>4} [{:>4}h] {}", k, v, get_bar_str((v * 2f32) as usize));
+    }
+    
+    println!("\nDISCIPLINES");
+    for (k, v) in discs {
+        println!("{:>3} [{:>4}h] {}", k, v, get_bar_str((v * 2f32) as usize));
     }
 }
 
