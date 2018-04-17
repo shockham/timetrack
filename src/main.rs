@@ -66,21 +66,14 @@ fn main() {
         daily += &format!("{} [{:.1}h] {}\n", d.date, half_hours / 2f32, time_bar);
 
         for l in d.logs {
-            if !cats.contains_key(&l.cat) {
-                cats.insert(l.cat, l.time);
-            } else {
-                let mut cat = cats[&l.cat];
-                cat += l.time;
-                cats.insert(l.cat, cat);
-            }
+            let time = l.time;
+            cats.entry(l.cat)
+                .and_modify(|e| *e += time)
+                .or_insert(l.time);
             
-            if !discs.contains_key(&l.disc) {
-                discs.insert(l.disc, l.time);
-            } else {
-                let mut disc = discs[&l.disc];
-                disc += l.time;
-                discs.insert(l.disc, disc);
-            }
+            discs.entry(l.disc)
+                .and_modify(|e| *e += time)
+                .or_insert(0f32);
         }
     }
 
