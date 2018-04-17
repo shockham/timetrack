@@ -13,7 +13,7 @@ struct Day {
 
 impl Day {
     fn new(str: &str) -> Day {
-        let mut d: Vec<&str> = str.split("\n").filter(|s| !s.is_empty()).collect();
+        let mut d: Vec<&str> = str.split('\n').filter(|s| !s.is_empty()).collect();
 
         Day {
             date: d.remove(0).into(),
