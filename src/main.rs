@@ -98,6 +98,6 @@ fn parse_file() -> Vec<Day> {
     contents
         .split("- ")
         .filter(|s| !s.is_empty())
-        .map(|d| Day::new(d.clone()))
+        .map(|d| Day::new(d))
         .collect::<Vec<Day>>()
 }
