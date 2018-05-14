@@ -1,9 +1,8 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
-use std::str::FromStr;
 use std::iter;
-use std::collections::HashMap;
-
+use std::str::FromStr;
 
 #[derive(Debug, Clone)]
 struct Day {
@@ -70,8 +69,9 @@ fn main() {
             cats.entry(l.cat)
                 .and_modify(|e| *e += time)
                 .or_insert(l.time);
-            
-            discs.entry(l.disc)
+
+            discs
+                .entry(l.disc)
                 .and_modify(|e| *e += time)
                 .or_insert(0f32);
         }
@@ -83,7 +83,7 @@ fn main() {
     for (k, v) in cats {
         println!("{:>4} [{:>4}h] {}", k, v, get_bar_str((v * 2f32) as usize));
     }
-    
+
     println!("\nDISCIPLINES");
     for (k, v) in discs {
         println!("{:>3} [{:>4}h] {}", k, v, get_bar_str((v * 2f32) as usize));
